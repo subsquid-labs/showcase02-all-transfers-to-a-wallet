@@ -1,0 +1,7 @@
+type TransferToVitalik @entity {
+  id: ID!
+  block: Int! @index
+  contract: String! @index
+  from: String! @index
+  value: BigInt!
+}
