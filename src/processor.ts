@@ -1,4 +1,3 @@
-import {lookupArchive} from '@subsquid/archive-registry'
 import {
     BlockHeader,
     DataHandlerContext,
@@ -13,7 +12,7 @@ export const VITALIK_ETH_TOPIC = '0x000000000000000000000000d8da6bf26964af9d7eed
 
 export const processor = new EvmBatchProcessor()
     .setDataSource({
-        archive: lookupArchive('eth-mainnet'),
+        archive: 'https://v2.archive.subsquid.io/network/ethereum-mainnet',
     })
     .addLog({
         topic0: [erc20abi.events.Transfer.topic],
