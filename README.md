@@ -1,6 +1,6 @@
 # Showcase squid 02: all Transfers to a given wallet
 
-This squid captures all `Transfer(address,address,uint256)` events where the receiver is `vitalik.eth`. This includes ERC20, ERC721 transfers and possibly events with the same signature made with other protocols. See more examples of requesting data with squids on the [showcase page](https://docs.subsquid.io/evm-indexing/configuration/showcase) of Subsquid documentation.
+This squid captures all `Transfer(address,address,uint256)` events where the receiver is `vitalik.eth`. This includes ERC20, ERC721 transfers and possibly events with the same signature made with other protocols. See more examples of requesting data with squids on the [showcase page](https://docs.sqd.dev/en/sdk) of Subsquid documentation.
 
 Dependencies: Node.js, Docker.
 
