@@ -1,26 +1,31 @@
+import {run} from '@subsquid/batch-processor'
+import {augmentBlock} from '@subsquid/evm-objects'
+import {createLogger} from '@subsquid/logger'
 import {TypeormDatabase} from '@subsquid/typeorm-store'
 import {TransferToVitalik} from './model'
-import {processor, VITALIK_ETH_TOPIC} from './processor'
+import {dataSource, VITALIK_ETH_TOPIC} from './processor'
 import * as erc20abi from './abi/erc20'
 
-processor.run(new TypeormDatabase({supportHotBlocks: false}), async (ctx) => {
+const log = createLogger('sqd:processor')
+
+run(dataSource, new TypeormDatabase({supportHotBlocks: true}), async (ctx) => {
     const transfers: TransferToVitalik[] = []
 
-    for (let block of ctx.blocks) {
-        for (let log of block.logs) {
-            if (log.topics[0] === erc20abi.events.Transfer.topic && log.topics[2] === VITALIK_ETH_TOPIC) {
+    for (let block of ctx.blocks.map(augmentBlock)) {
+        for (let evmLog of block.logs) {
+            if (evmLog.topics[0] === erc20abi.events.Transfer.topic && evmLog.topics[2] === VITALIK_ETH_TOPIC) {
                 try {
-                    let {from, to, value} = erc20abi.events.Transfer.decode(log)
+                    let {from, to, value} = erc20abi.events.Transfer.decode(evmLog)
                     transfers.push(new TransferToVitalik({
-                        id: log.id,
-                        block: block.header.height,
-                        contract: log.address,
+                        id: evmLog.id,
+                        block: block.header.number,
+                        contract: evmLog.address,
                         from,
                         value
                     }))
                 }
                 catch {
-                    ctx.log.error(`cannot decode a Transfer at block ${block.header.height}, skipping it`)
+                    log.error(`cannot decode a Transfer at block ${block.header.number}, skipping it`)
                 }
             }
         }

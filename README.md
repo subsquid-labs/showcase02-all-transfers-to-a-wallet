@@ -15,7 +15,7 @@ sqd init showcase02 -t https://github.com/subsquid-labs/showcase02-all-transfers
 cd showcase02
 
 # 2. Install dependencies
-npm ci
+npm i
 
 # 3. Start a Postgres database container and detach
 sqd up
